@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <defaults public="false" />
+        
+        <!--<service id="Kematjaya\ItemPack\Service\PriceService" class="Kematjaya\ItemPack\Service\PriceService">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+        </service>
+        <service id="Kematjaya\ItemPack\Service\StockService" class="Kematjaya\ItemPack\Service\StockService">
+            <argument type="service" id="doctrine.orm.default_entity_manager" />
+        </service>
+        <service id="kematjaya.price_service" alias="Kematjaya\ItemPack\Service\PriceService" public="true"></service>
+        <service id="kematjaya.stock_service" alias="Kematjaya\ItemPack\Service\StockService" public="true"></service>-->
+    </services>
+</container>
