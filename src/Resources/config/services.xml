@@ -7,13 +7,13 @@
         
         <service id="Kematjaya\PurchashingBundle\Service\PurchaseService" class="Kematjaya\PurchashingBundle\Service\PurchaseService">
             <argument type="service" id="doctrine.orm.default_entity_manager" />
-            <argument type="service" id="kematjaya.price_service" />
             <argument type="service" id="kematjaya.stock_service" />
+            <argument type="service" id="kematjaya.price_service" />
         </service>
         <service id="kematjaya.purchase_service" alias="Kematjaya\PurchashingBundle\Service\PurchaseService" public="true"></service>
         <service id="Kematjaya\PurchashingBundle\Repo\PurchaseDetailRepoInterface" alias="kematjaya.purchase_detail_repo" public="true"/>
         <service id="Kematjaya\PurchashingBundle\Repo\PurchaseRepoInterface" alias="kematjaya.purchase_repo" public="true"/>
-        <service id="Kematjaya\PurchashingBundle\EventSubscriber\ItemEventSubscriber" class="Kematjaya\PurchashingBundle\EventSubscriber\ItemEventSubscriber">
+        <service id="Kematjaya\PurchashingBundle\EventSubscriber\ItemPostEventSubscriber" class="Kematjaya\PurchashingBundle\EventSubscriber\ItemPostEventSubscriber">
         </service>
         <service id="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseDetailEventSubscriber" class="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseDetailEventSubscriber">
         </service>
