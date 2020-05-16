@@ -5,13 +5,20 @@
     <services>
         <defaults public="false" />
         
-        <!--<service id="Kematjaya\ItemPack\Service\PriceService" class="Kematjaya\ItemPack\Service\PriceService">
+        <service id="Kematjaya\PurchashingBundle\Service\PurchaseService" class="Kematjaya\PurchashingBundle\Service\PurchaseService">
             <argument type="service" id="doctrine.orm.default_entity_manager" />
+            <argument type="service" id="kematjaya.price_service" />
+            <argument type="service" id="kematjaya.stock_service" />
         </service>
-        <service id="Kematjaya\ItemPack\Service\StockService" class="Kematjaya\ItemPack\Service\StockService">
-            <argument type="service" id="doctrine.orm.default_entity_manager" />
+        <service id="kematjaya.purchase_service" alias="Kematjaya\PurchashingBundle\Service\PurchaseService" public="true"></service>
+        <service id="Kematjaya\PurchashingBundle\Repo\PurchaseDetailRepoInterface" alias="kematjaya.purchase_detail_repo" public="true"/>
+        <service id="Kematjaya\PurchashingBundle\Repo\PurchaseRepoInterface" alias="kematjaya.purchase_repo" public="true"/>
+        <service id="Kematjaya\PurchashingBundle\EventSubscriber\ItemEventSubscriber" class="Kematjaya\PurchashingBundle\EventSubscriber\ItemEventSubscriber">
         </service>
-        <service id="kematjaya.price_service" alias="Kematjaya\ItemPack\Service\PriceService" public="true"></service>
-        <service id="kematjaya.stock_service" alias="Kematjaya\ItemPack\Service\StockService" public="true"></service>-->
+        <service id="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseDetailEventSubscriber" class="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseDetailEventSubscriber">
+        </service>
+        <service id="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseEventSubscriber" class="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseEventSubscriber">
+            <argument type="service" id="kematjaya.purchase_service" />
+        </service>
     </services>
 </container>
