@@ -20,5 +20,8 @@
         <service id="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseEventSubscriber" class="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseEventSubscriber">
             <argument type="service" id="kematjaya.purchase_service" />
         </service>
+        <service id="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseFormEventSubscriber" class="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseFormEventSubscriber">
+            <argument type="service" id="property_info" />
+        </service>
     </services>
 </container>
