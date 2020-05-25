@@ -15,12 +15,12 @@
         <service id="Kematjaya\PurchashingBundle\Repo\PurchaseRepoInterface" alias="kematjaya.purchase_repo" public="true"/>
         <service id="Kematjaya\PurchashingBundle\EventSubscriber\ItemPostEventSubscriber" class="Kematjaya\PurchashingBundle\EventSubscriber\ItemPostEventSubscriber"></service>
         <service id="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseDetailEventSubscriber" class="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseDetailEventSubscriber"></service>
+        <service id="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseFormEventSubscriber" class="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseFormEventSubscriber">
+            <argument type="service" id="property_info" />
+        </service>
         <service id="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseEventSubscriber" class="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseEventSubscriber">
             <argument type="service" id="kematjaya.purchase_service" />
             <tag name="doctrine.event_listener" event="onFlush"/>
-        </service>
-        <service id="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseFormEventSubscriber" class="Kematjaya\PurchashingBundle\EventSubscriber\PurchaseFormEventSubscriber">
-            <argument type="service" id="property_info" />
         </service>
     </services>
 </container>
