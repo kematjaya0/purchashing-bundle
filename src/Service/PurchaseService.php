@@ -21,18 +21,30 @@ class PurchaseService
         $this->priceService = $priceService;
     }
     
-    protected function doPersist($entity)
+    protected function doPersist($entity, ?array $propertyChange)
     {
         $uow = $this->entityManager->getUnitOfWork();
+        if(!empty($propertyChange))
+        {
+            foreach($propertyChange as $k => $v)
+            {
+                $uow->propertyChanged($entity, $k, $v[0], $v[1]);
+            }
+            
+        }
         $this->entityManager->persist($entity);
-        $classMetadata = $this->entityManager->getClassMetadata(get_class($entity));
-        $uow->computeChangeSet($classMetadata, $entity);
+        if(empty($propertyChange))
+        {
+            $classMetadata = $this->entityManager->getClassMetadata(get_class($entity));
+            $uow->computeChangeSet($classMetadata, $entity);
+        }
         
         return $entity;
     }
     
     public function update(PurchaseInterface $entity)
     {
+        $propertyChange = [];
         if($entity->getIsLocked())
         {
             $total = 0;
@@ -46,9 +58,12 @@ class PurchaseService
                 }
             }
             
+            $uow = $this->entityManager->getUnitOfWork();
+            $propertyChange = $uow->getEntityChangeSet($entity);
+            $propertyChange['total'] = [$entity->getTotal(), $total];
             $entity->setTotal($total);
-            $entity->setIsLocked(true);
-            return $this->doPersist($entity);
+            
+            return $this->doPersist($entity, $propertyChange);
         }
     }
 }
