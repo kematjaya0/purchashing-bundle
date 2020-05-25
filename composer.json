@@ -10,8 +10,8 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "kematjaya/item-pack-bundle": "dev-master",
-        "kematjaya/currency-lib": "dev-master",
+        "kematjaya/item-pack-bundle": "^1.0",
+        "kematjaya/currency-lib": "^v1.0",
         "doctrine/common": "^2.13",
         "doctrine/orm": "^2.7",
         "symfony/http-kernel": "^4.0|^5.0",
