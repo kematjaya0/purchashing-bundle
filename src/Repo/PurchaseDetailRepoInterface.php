@@ -11,4 +11,6 @@ use Doctrine\Common\Persistence\ObjectRepository;
 interface PurchaseDetailRepoInterface extends ObjectRepository 
 {
     public function createObject(PurchaseInterface $purchase):PurchaseDetailInterface;
+    
+    public function save(PurchaseDetailInterface $package): void;
 }

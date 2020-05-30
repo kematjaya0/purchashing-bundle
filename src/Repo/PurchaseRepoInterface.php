@@ -10,4 +10,6 @@ use Doctrine\Common\Persistence\ObjectRepository;
 interface PurchaseRepoInterface extends ObjectRepository
 {
     public function createObject():PurchaseInterface;
+    
+    public function save(PurchaseInterface $package): void;
 }
