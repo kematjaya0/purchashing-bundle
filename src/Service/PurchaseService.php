@@ -23,9 +23,9 @@ class PurchaseService
     
     public function update(PurchaseInterface $entity):PurchaseInterface
     {
+        $total = 0;
         if($entity->getIsLocked())
         {
-            $total = 0;
             foreach($entity->getPurchaseDetails() as $purchaseDetail)
             {
                 if($purchaseDetail instanceof PurchaseDetailInterface)
@@ -38,10 +38,9 @@ class PurchaseService
             }
             
             $entity->setTotal($total);
-            
-            $this->purchaseRepo->save($entity);
-            
         }
+        
+        $this->purchaseRepo->save($entity);
         
         return $entity;
     }
