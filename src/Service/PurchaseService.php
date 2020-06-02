@@ -5,6 +5,8 @@ namespace Kematjaya\PurchashingBundle\Service;
 use Kematjaya\PurchashingBundle\Repo\PurchaseRepoInterface;
 use Kematjaya\ItemPack\Service\StockServiceInterface;
 use Kematjaya\ItemPack\Service\PriceServiceInterface;
+use Kematjaya\ItemPack\Service\StockCardServiceInterface;
+use Kematjaya\ItemPack\Lib\Stock\Entity\ClientStockCardInterface;
 use Kematjaya\PurchashingBundle\Entity\PurchaseInterface;
 use Kematjaya\PurchashingBundle\Entity\PurchaseDetailInterface;
 /**
@@ -12,13 +14,18 @@ use Kematjaya\PurchashingBundle\Entity\PurchaseDetailInterface;
  */
 class PurchaseService 
 {
-    protected $purchaseRepo, $stockService, $priceService;
+    protected $purchaseRepo, $stockService, $priceService, $stockCardService;
     
-    function __construct(PurchaseRepoInterface $purchaseRepo, StockServiceInterface $stockService, PriceServiceInterface $priceService) 
+    function __construct(
+            PurchaseRepoInterface $purchaseRepo, 
+            StockServiceInterface $stockService, 
+            PriceServiceInterface $priceService, 
+            StockCardServiceInterface $stockCardService) 
     {
         $this->purchaseRepo = $purchaseRepo;
         $this->stockService = $stockService;
         $this->priceService = $priceService;
+        $this->stockCardService = $stockCardService;
     }
     
     public function update(PurchaseInterface $entity):PurchaseInterface
@@ -33,6 +40,12 @@ class PurchaseService
                     $total += $purchaseDetail->getTotal();
                     $item = $purchaseDetail->getItem();
                     $item = $this->stockService->addStock($item, $purchaseDetail->getQuantity(), $purchaseDetail->getPackaging());
+                    if($purchaseDetail instanceof ClientStockCardInterface) 
+                    {
+                        $stockCard = $this->stockCardService->insertStockCard($item, $purchaseDetail);
+                    }
+                    
+                    
                     $item = $this->priceService->updatePrincipalPrice($item, $purchaseDetail->getPrice(), $purchaseDetail->getPackaging());
                 }
             }

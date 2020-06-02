@@ -16,6 +16,7 @@
             <argument type="service" id="kematjaya.purchase_repo" />
             <argument type="service" id="kematjaya.stock_service" />
             <argument type="service" id="kematjaya.price_service" />
+            <argument type="service" id="kematjaya.stock_card_service" />
         </service>
         <service id="kematjaya.purchase_service" alias="Kematjaya\PurchashingBundle\Service\PurchaseService" public="true"></service>
         
