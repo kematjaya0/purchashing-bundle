@@ -2,6 +2,7 @@
 
 namespace Kematjaya\PurchashingBundle\Entity;
 
+use Kematjaya\PurchashingBundle\Entity\SupplierInterface;
 use Doctrine\Common\Collections\Collection;
 /**
  * @author Nur Hidayatullah <kematjaya0@gmail.com>
@@ -20,6 +21,10 @@ interface PurchaseInterface
 
     public function setPurchaseAt(\DateTimeInterface $purchase_at): self;
 
+    public function getSupplier():?SupplierInterface;
+    
+    public function setSupplier(SupplierInterface $supplier): self;
+    
     public function getTotal(): ?float;
 
     public function setTotal(float $total): self;
