@@ -10,7 +10,7 @@ use Kematjaya\ItemPack\Lib\Item\Entity\ItemInterface;
  */
 interface PurchaseDetailInterface 
 {
-    public function getId(): ?int;
+    public function getId(): ?\Ramsey\Uuid\UuidInterface;
 
     public function getItem(): ?ItemInterface;
 

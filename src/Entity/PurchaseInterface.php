@@ -11,7 +11,7 @@ interface PurchaseInterface
 {
     public function __toString();
     
-    public function getId(): ?int;
+    public function getId(): ?\Ramsey\Uuid\UuidInterface;
 
     public function getCode(): ?string;
 
