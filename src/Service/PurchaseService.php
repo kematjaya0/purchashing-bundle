@@ -76,6 +76,11 @@ class PurchaseService
                     }
                     
                     $price = $this->countPrincipalPrice($item, $purchaseDetail->getTotal(), $purchaseDetail->getQuantity(), $purchaseDetail->getPackaging());
+                    if(round($price) != $price)
+                    {
+                        $price = round($price, -2) +100;;
+                    }
+                    
                     $priceLog = $this->priceService->saveNewPrice($item, $price);
                 }
             }
