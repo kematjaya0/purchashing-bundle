@@ -1,6 +1,5 @@
 /vendor
 /nbproject
 /var
-/tests
 phpunit.xml.dist
 composer.lock
