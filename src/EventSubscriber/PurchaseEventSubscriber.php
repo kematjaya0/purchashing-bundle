@@ -8,6 +8,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Events;
 use Doctrine\Common\EventSubscriber;
 /**
+ * @deprecated since version 2.5, use Kematjaya\PurchashingBundle\Listener\PurchasingListener instead 
  * @author Nur Hidayatullah <kematjaya0@gmail.com>
  */
 class PurchaseEventSubscriber implements EventSubscriber

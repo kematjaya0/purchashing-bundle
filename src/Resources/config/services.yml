@@ -22,3 +22,8 @@ services:
         
     Kematjaya\PurchashingBundle\Service\PurchashingServiceInterface:
         class: Kematjaya\PurchashingBundle\Service\PurchaseService
+        
+    Kematjaya\PurchashingBundle\Listener\PurchasingListener:
+        class: Kematjaya\PurchashingBundle\Listener\PurchasingListener
+        tags: 
+            - { name: doctrine.event_listener, event: onFlush }
