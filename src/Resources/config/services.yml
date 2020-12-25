@@ -1,1 +1,24 @@
-
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+    
+    kematjaya.stock_service:
+        alias: Kematjaya\ItemPack\Service\StockServiceInterface
+        public: true
+        
+    kematjaya.stock_card_service:
+        alias: Kematjaya\ItemPack\Service\StockCardServiceInterface
+        public: true
+        
+    kematjaya.price_service:
+        alias: Kematjaya\ItemPack\Service\PriceServiceInterface
+        public: true
+        
+    kematjaya.price_log_service:
+        alias: Kematjaya\ItemPack\Service\PriceLogServiceInterface
+        public: true
+        
+    Kematjaya\PurchashingBundle\Service\PurchashingServiceInterface:
+        class: Kematjaya\PurchashingBundle\Service\PurchaseService

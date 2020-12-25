@@ -3,6 +3,7 @@
 namespace Kematjaya\PurchashingBundle\Service;
 
 use Kematjaya\PurchashingBundle\Repo\PurchaseRepoInterface;
+use Kematjaya\ItemPack\Service\ServiceTrait;
 use Kematjaya\ItemPack\Lib\Item\Entity\ItemInterface;
 use Kematjaya\ItemPack\Lib\Packaging\Entity\PackagingInterface;
 use Kematjaya\ItemPack\Lib\ItemPackaging\Entity\ItemPackageInterface;
@@ -15,16 +16,35 @@ use Kematjaya\PurchashingBundle\Entity\PurchaseDetailInterface;
 /**
  * @author Nur Hidayatullah <kematjaya0@gmail.com>
  */
-class PurchaseService 
+class PurchaseService implements PurchashingServiceInterface
 {
+    /**
+     * 
+     * @var PurchaseRepoInterface
+     */
+    protected $purchaseRepo;
     
-    protected $purchaseRepo, $stockService, $priceService, $stockCardService;
+    /**
+     * 
+     * @var StockServiceInterface
+     */
+    protected $stockService;
     
-    function __construct(
-            PurchaseRepoInterface $purchaseRepo, 
-            StockServiceInterface $stockService, 
-            PriceLogServiceInterface $priceService, 
-            StockCardServiceInterface $stockCardService) 
+    /**
+     * 
+     * @var PriceLogServiceInterface
+     */
+    protected $priceService;
+    
+    /**
+     * 
+     * @var StockCardServiceInterface
+     */
+    protected $stockCardService;
+    
+    use ServiceTrait;
+    
+    function __construct(PurchaseRepoInterface $purchaseRepo, StockServiceInterface $stockService, PriceLogServiceInterface $priceService, StockCardServiceInterface $stockCardService) 
     {
         $this->purchaseRepo = $purchaseRepo;
         $this->stockService = $stockService;
@@ -32,59 +52,51 @@ class PurchaseService
         $this->stockCardService = $stockCardService;
     }
     
-    protected function getItemPackByPackagingOrSmallestUnit(ItemInterface $item, PackagingInterface $packaging = null):?ItemPackageInterface
-    {
-        if($item->getItemPackages()->isEmpty())
-        {
-            throw new \Exception('item package is empty');
-        }
-        return $item->getItemPackages()->filter(function (ItemPackageInterface $itemPackage) use ($packaging) {
-            if($packaging)
-            {
-                return $packaging->getCode() === $itemPackage->getPackaging()->getCode();
-            }
-            return $itemPackage->isSmallestUnit();
-        })->first();
-    }
-    
-    public function countPrincipalPrice(ItemInterface $item, float $price, float $quantity, PackagingInterface $packaging = null) : float
-    {
-        $itemPack = $this->getItemPackByPackagingOrSmallestUnit($item, $packaging);
-        if($itemPack instanceof ItemPackageInterface)
-        {
-            $quantity = ($itemPack->isSmallestUnit()) ? $quantity : $quantity * $itemPack->getQuantity();
-        }
-        
-        return $price / $quantity;
-    }
     
     public function update(PurchaseInterface $entity):PurchaseInterface
     {
-        $total = 0;
-        if($entity->getIsLocked())
-        {
-            foreach($entity->getPurchaseDetails() as $purchaseDetail)
-            {
-                if($purchaseDetail instanceof PurchaseDetailInterface)
-                {
-                    $total += $purchaseDetail->getTotal();
-                    $item = $purchaseDetail->getItem();
-                    $item = $this->stockService->addStock($item, $purchaseDetail->getQuantity(), $purchaseDetail->getPackaging());
-                    if($purchaseDetail instanceof ClientStockCardInterface) 
-                    {
-                        $stockCard = $this->stockCardService->insertStockCard($item, $purchaseDetail);
-                    }
-                    
-                    $price = $this->countPrincipalPrice($item, $purchaseDetail->getTotal(), $purchaseDetail->getQuantity(), $purchaseDetail->getPackaging());
-                    $priceLog = $this->priceService->saveNewPrice($item, $price);
-                }
-            }
-            
-            $entity->setTotal($total);
+        
+        if(!$entity->getIsLocked()) {
+            return $entity;
         }
+        
+        $entity->setTotal($this->countTotal($entity));
         
         $this->purchaseRepo->save($entity);
         
         return $entity;
+    }
+    
+    public function countTotal(PurchaseInterface $entity):float
+    {
+        $total = 0;
+        foreach($entity->getPurchaseDetails() as $purchaseDetail) {
+            if(!$purchaseDetail instanceof PurchaseDetailInterface) {
+                continue;
+            }
+            
+            $total += $purchaseDetail->getTotal();
+            $item = $this->stockService->addStock($purchaseDetail->getItem(), $purchaseDetail->getQuantity(), $purchaseDetail->getPackaging());
+            if($purchaseDetail instanceof ClientStockCardInterface) {
+                $this->stockCardService->insertStockCard($item, $purchaseDetail);
+            }
+
+            $price = $this->countPrincipalPrice($item, $purchaseDetail->getTotal(), $purchaseDetail->getQuantity(), $purchaseDetail->getPackaging());
+            $this->priceService->saveNewPrice($item, $price);
+        }
+        
+        return $total;
+    }
+    
+    protected function countPrincipalPrice(ItemInterface $item, float $price, float $quantity, PackagingInterface $packaging) : float
+    {
+        $itemPack = $this->getItemPackByPackagingOrSmallestUnit($item, $packaging);
+        if(!$itemPack instanceof ItemPackageInterface) {
+            throw new \Exception(sprintf('cannot found item package for item %s', $item->getCode()));
+        }
+        
+        $smallestQuantity = ($itemPack->isSmallestUnit()) ? $quantity : $quantity * $itemPack->getQuantity();
+        
+        return $price / $smallestQuantity;
     }
 }

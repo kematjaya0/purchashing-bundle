@@ -1,0 +1,30 @@
+framework:
+    test: true
+    
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+        
+    Kematjaya\ItemPack\Lib\Item\Repo\ItemRepoInterface:
+        class: Kematjaya\PurchashingBundle\Tests\Repository\ItemRepository
+            
+    Kematjaya\ItemPack\Lib\Stock\Repo\StockCardRepoInterface:
+        class: Kematjaya\PurchashingBundle\Tests\Repository\StockCardRepository
+            
+    Kematjaya\ItemPack\Lib\ItemPackaging\Repo\ItemPackageRepoInterface:
+        class: Kematjaya\PurchashingBundle\Tests\Repository\ItemPackageRepository
+            
+    Kematjaya\ItemPack\Lib\Price\Repo\PriceLogRepoInterface:
+        class: Kematjaya\PurchashingBundle\Tests\Repository\PriceLogRepository
+        
+    Kematjaya\PurchashingBundle\Repo\PurchaseRepoInterface:
+        class: Kematjaya\PurchashingBundle\Tests\Repository\PurchaseRepository
+            
+    Kematjaya\ItemPack\Event\PriceEventInterface:
+        class: Kematjaya\PurchashingBundle\Tests\Model\PriceEvent
+    
+    kematjaya.purchasing_service:
+        alias: Kematjaya\PurchashingBundle\Service\PurchashingServiceInterface
+        public: true

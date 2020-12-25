@@ -3,11 +3,11 @@
 namespace Kematjaya\PurchashingBundle\Repo;
 
 use Kematjaya\PurchashingBundle\Entity\PurchaseInterface;
-use Doctrine\Common\Persistence\ObjectRepository;
+
 /**
  * @author Nur Hidayatullah <kematjaya0@gmail.com>
  */
-interface PurchaseRepoInterface extends ObjectRepository
+interface PurchaseRepoInterface
 {
     public function createObject():PurchaseInterface;
     

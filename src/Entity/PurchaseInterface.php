@@ -4,6 +4,7 @@ namespace Kematjaya\PurchashingBundle\Entity;
 
 use Kematjaya\PurchashingBundle\Entity\SupplierInterface;
 use Doctrine\Common\Collections\Collection;
+
 /**
  * @author Nur Hidayatullah <kematjaya0@gmail.com>
  */
@@ -11,8 +12,6 @@ interface PurchaseInterface
 {
     public function __toString();
     
-    public function getId(): ?int;
-
     public function getCode(): ?string;
 
     public function setCode(string $code): self;

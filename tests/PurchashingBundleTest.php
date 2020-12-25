@@ -1,40 +1,100 @@
 <?php
 
-namespace Kematjaya\ItemPack\Tests;
+namespace Kematjaya\PurchashingBundle\Tests;
 
-use Kematjaya\ItemPack\Service\PriceLogServiceInterface;
-use Kematjaya\ItemPack\Lib\Price\Entity\PriceLogInterface;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Kematjaya\PurchashingBundle\Service\PurchashingServiceInterface;
+use Kematjaya\PurchashingBundle\Entity\PurchaseInterface;
+use Kematjaya\PurchashingBundle\Tests\Model\PurchaseTest;
+use Kematjaya\PurchashingBundle\Tests\Model\PurchaseDetailTest;
+use Kematjaya\PurchashingBundle\Tests\Model\PackagingTest;
+use Kematjaya\PurchashingBundle\Tests\Model\ItemTest;
+use Kematjaya\PurchashingBundle\Tests\Model\ItemPackageTest;
 
 /**
  * @author Nur Hidayatullah <kematjaya0@gmail.com>
  */
-class PriceLogServiceTest extends KmjItemPackBundleTest
+class PurchashingBundleTest extends WebTestCase
 {
-    public function testInstance():PriceLogServiceInterface
+    public static function getKernelClass() 
+    {
+        return AppKernelTest::class;
+    }
+    
+    protected function getContainer(): ContainerInterface
+    {
+        $client = parent::createClient();
+        return $client->getContainer();
+    }
+    
+    public function testInstance(): PurchashingServiceInterface
     {
         $container = $this->getContainer();
-        $this->assertTrue($container->has('kematjaya.price_log_service'));
-        $service = $container->get('kematjaya.price_log_service');
-        $this->assertInstanceOf(PriceLogServiceInterface::class, $service);
+        $this->assertTrue($container->has('kematjaya.purchasing_service'));
+        $this->assertInstanceOf(PurchashingServiceInterface::class, $container->get('kematjaya.purchasing_service'));
         
-        return $service;
+        return $container->get('kematjaya.purchasing_service');
     }
     
     /**
      * @depends testInstance
      */
-    public function testSaveNewPrice(PriceLogServiceInterface $service)
+    public function testUpdateWithNotLocked(PurchashingServiceInterface $service)
     {
-        $item = $this->buildObject();
+        $entity = (new PurchaseTest());
+        $actual = $service->update($entity);
+        $this->assertInstanceOf(PurchaseInterface::class, $actual);
+        $this->assertEquals($entity->getIsLocked(), $actual->getIsLocked());
+        $this->assertEquals(0, $actual->getTotal());
+    }
+    
+    /**
+     * @depends testInstance
+     */
+    public function testUpdateWithLocked(PurchashingServiceInterface $service)
+    {
+        $entity = new PurchaseTest();
+        $entity->setIsLocked(true);
         
-        $priceLog = $service->saveNewPrice($item, 1200);
-        $this->assertInstanceOf(PriceLogInterface::class, $priceLog);
-        $this->assertEquals(PriceLogInterface::STATUS_NEW, $priceLog->getStatus());
+        $actual = $service->update($entity);
+        $this->assertInstanceOf(PurchaseInterface::class, $actual);
+        $this->assertEquals($entity->getIsLocked(), $actual->getIsLocked());
+        $this->assertEquals(0, $actual->getTotal());
         
-        $service->rejectPrice($priceLog);
-        $this->assertEquals(PriceLogInterface::STATUS_REJECTED, $priceLog->getStatus());
+        $packaging = (new PackagingTest())->setCode('pcs')->setName('PCS');
+        $item = new ItemTest();
+        $item->setCode('test')->setName('TEST')
+                ->setPrincipalPrice(1000)
+                ->setLastPrice(1200);
+        $itemPackage = (new ItemPackageTest())
+                ->setItem($item)
+                ->setPackaging($packaging)
+                ->setPrincipalPrice($item->getPrincipalPrice())
+                ->setQuantity(1)
+                ->setSalePrice($item->getLastPrice());
+        $item->addItemPackage($itemPackage);
         
-        $service->approvePrice($priceLog);
-        $this->assertEquals(PriceLogInterface::STATUS_APPROVED, $priceLog->getStatus());
+        $totals = 0;
+        for($i = 1; $i<=5; $i++) {
+            $price = 1000;
+            $total = $price * $i;
+            $detail = (new PurchaseDetailTest())
+                    ->setItem($item)
+                    ->setPackaging($packaging)
+                    ->setPrice($price)
+                    ->setPurchase($entity)
+                    ->setQuantity($i)
+                    ->setTax(0)
+                    ->setTotal($total);
+            
+            $totals += $total;
+            $entity->addPurchaseDetails($detail);
+        }
+        
+        $actual = $service->update($entity);
+        $this->assertInstanceOf(PurchaseInterface::class, $actual);
+        $this->assertEquals($entity->getIsLocked(), $actual->getIsLocked());
+        $this->assertEquals($totals, $actual->getTotal());
     }
 }

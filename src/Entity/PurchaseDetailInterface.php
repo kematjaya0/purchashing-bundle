@@ -10,8 +10,6 @@ use Kematjaya\ItemPack\Lib\Item\Entity\ItemInterface;
  */
 interface PurchaseDetailInterface 
 {
-    public function getId(): ?int;
-
     public function getItem(): ?ItemInterface;
 
     public function setItem(?ItemInterface $item): self;
