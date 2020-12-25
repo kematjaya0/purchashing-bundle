@@ -27,3 +27,12 @@ services:
         class: Kematjaya\PurchashingBundle\Listener\PurchasingListener
         tags: 
             - { name: doctrine.event_listener, event: onFlush }
+            
+    Kematjaya\PurchashingBundle\EventSubscriber\ItemPostEventSubscriber:
+        class: Kematjaya\PurchashingBundle\EventSubscriber\ItemPostEventSubscriber
+        
+    Kematjaya\PurchashingBundle\EventSubscriber\PurchaseDetailEventSubscriber:
+        class: Kematjaya\PurchashingBundle\EventSubscriber\PurchaseDetailEventSubscriber
+        
+    Kematjaya\PurchashingBundle\EventSubscriber\PurchaseFormEventSubscriber:
+        class: Kematjaya\PurchashingBundle\EventSubscriber\PurchaseFormEventSubscriber

@@ -33,23 +33,23 @@ class ItemPostEventSubscriber implements EventSubscriberInterface
     
     private function changePackaging(FormInterface $form, ItemInterface $item = null)
     {
-        $choices = [];
-        if($item)
-        {
-            foreach($item->getItemPackages() as $itemPackage)
-            {
-                if($itemPackage instanceof ItemPackageInterface)
-                {
-                    $choices[] = $itemPackage->getPackaging();
-                }
-            }
+        
+        if(!$item) {
+            return;
         }
+        
+        $choices = [];
+        foreach($item->getItemPackages() as $itemPackage) {
+            if(!$itemPackage instanceof ItemPackageInterface) {
+                continue;
+            }
             
+            $choices[] = $itemPackage->getPackaging();
+        }
         
         $form->add('packaging', null, [
             'label' => 'packaging',
-            'choices' => $choices, "required" => true,
-            'attr' => ['class' => 'form-control']
+            'choices' => $choices, "required" => true
         ]);
     }
 }
