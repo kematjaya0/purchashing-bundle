@@ -47,8 +47,8 @@ class PurchaseFormEventSubscriber implements EventSubscriberInterface
         if(!$data->getIsLocked()) {
             if($data->getPurchaseDetails()->isEmpty()) {
                 $form->add('is_locked', HiddenType::class);
-                return;
             }
+            return;
         }
 
 
