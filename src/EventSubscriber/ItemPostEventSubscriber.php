@@ -34,13 +34,13 @@ class ItemPostEventSubscriber implements EventSubscriberInterface
     private function changePackaging(FormInterface $form, ItemInterface $item = null)
     {
         
-        if(!$item) {
+        if (!$item) {
             return;
         }
         
         $choices = [];
-        foreach($item->getItemPackages() as $itemPackage) {
-            if(!$itemPackage instanceof ItemPackageInterface) {
+        foreach ($item->getItemPackages() as $itemPackage) {
+            if (!$itemPackage instanceof ItemPackageInterface) {
                 continue;
             }
             

@@ -23,7 +23,7 @@ class PurchaseDetailEventSubscriber implements EventSubscriberInterface
     public function preSetData(FormEvent $event)
     {
         $obj = $event->getData();
-        if(!$obj instanceof PurchaseDetailInterface) {
+        if (!$obj instanceof PurchaseDetailInterface) {
             return;
         }
         
@@ -37,7 +37,7 @@ class PurchaseDetailEventSubscriber implements EventSubscriberInterface
 
         $priceAttr = ($form->has('price')) ? $form->get('price')->getConfig()->getOption('attr') : [];
         $priceAttr['onchange'] = 'return countTotal()';
-        if(!isset($priceAttr['class'])) {
+        if (!isset($priceAttr['class'])) {
             $priceAttr['class'] = ' ';
         }
         
@@ -49,9 +49,10 @@ class PurchaseDetailEventSubscriber implements EventSubscriberInterface
 
         $taxAttr = ($form->has('tax')) ? $form->get('tax')->getConfig()->getOption('attr') : [];
         $taxAttr['onchange'] = 'return countTotal()';
-        if(!isset($taxAttr['class'])) {
+        if (!isset($taxAttr['class'])) {
             $taxAttr['class'] = ' ';
         }
+        
         $taxAttr['class'] = (strpos('priceformat', $taxAttr['class']) !== false) ? trim($taxAttr['class']) : trim($taxAttr['class'] . ' priceformat');
         $form->add('tax', PriceType::class, [
             'label' => 'tax',
@@ -60,7 +61,7 @@ class PurchaseDetailEventSubscriber implements EventSubscriberInterface
 
         $totalAttr = ($form->has('total')) ? $form->get('total')->getConfig()->getOption('attr') : [];
         $quantityAttr['readonly'] = true;
-        if(!isset($quantityAttr['class'])) {
+        if (!isset($quantityAttr['class'])) {
             $quantityAttr['class'] = ' ';
         }
         $quantityAttr['class'] = (strpos('priceformat', $quantityAttr['class']) !== false) ? trim($quantityAttr['class']) : trim($quantityAttr['class'] . ' priceformat');

@@ -27,7 +27,7 @@ class PurchasingListener
         $em = $eventArgs->getEntityManager();
         $uow = $em->getUnitOfWork();
         foreach ($uow->getScheduledEntityInsertions() as $entity) {
-            if(!$entity instanceof PurchaseInterface) {
+            if (!$entity instanceof PurchaseInterface) {
                 continue;
             }
             
@@ -35,7 +35,7 @@ class PurchasingListener
         }
         
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
-            if(!$entity instanceof PurchaseInterface) {
+            if (!$entity instanceof PurchaseInterface) {
                 continue;
             }
             
@@ -43,7 +43,7 @@ class PurchasingListener
         }
         
         foreach($uow->getScheduledEntityDeletions() as $entity) {
-            if(!$entity instanceof PurchaseInterface) {
+            if (!$entity instanceof PurchaseInterface) {
                 continue;
             }
             

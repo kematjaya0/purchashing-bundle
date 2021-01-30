@@ -33,21 +33,21 @@ class PurchaseEventSubscriber implements EventSubscriber
         
         foreach ($uow->getScheduledEntityInsertions() as $entity) 
         {
-            if($entity instanceof PurchaseInterface) {
+            if ($entity instanceof PurchaseInterface) {
                 $this->updatePurchase($entity);
             }
         }
         
         foreach ($uow->getScheduledEntityUpdates() as $entity) 
         {
-            if($entity instanceof PurchaseInterface) {
+            if ($entity instanceof PurchaseInterface) {
                 $this->updatePurchase($entity);
             }
         }
         
         foreach($uow->getScheduledEntityDeletions() as $entity) 
         {
-            if($entity instanceof PurchaseInterface) {
+            if ($entity instanceof PurchaseInterface) {
                 $this->updatePurchase($entity);
             }
         }

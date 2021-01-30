@@ -30,7 +30,7 @@ class PurchaseFormEventSubscriber implements EventSubscriberInterface
     public function preSetData(FormEvent $event)
     {
         $data = $event->getData();
-        if(!$data instanceof PurchaseInterface) {
+        if (!$data instanceof PurchaseInterface) {
             return;
         }
         
@@ -40,12 +40,13 @@ class PurchaseFormEventSubscriber implements EventSubscriberInterface
             foreach ($ret as &$match) {
               $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
             }
+            
             return implode('_', $ret);  
         };
 
         $form = $event->getForm();
-        if(!$data->getIsLocked()) {
-            if($data->getPurchaseDetails()->isEmpty()) {
+        if (!$data->getIsLocked()) {
+            if ($data->getPurchaseDetails()->isEmpty()) {
                 $form->add('is_locked', HiddenType::class);
             }
             return;
@@ -54,7 +55,7 @@ class PurchaseFormEventSubscriber implements EventSubscriberInterface
 
         foreach ($this->propertyInfoExtractor->getProperties(get_class($data)) as $prop) {
             $name = $camelToSnakeCase($prop);
-            if($form->has($name)) {
+            if ($form->has($name)) {
                 $attr = $form->get($name)->getConfig()->getOptions();
                 $attr['attr']['readonly'] = true;
                 $form->add($name, null, $attr);

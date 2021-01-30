@@ -20,4 +20,10 @@ class ItemRepository implements ItemRepoInterface
     {
         
     }
+
+    public function findIdenticItem(ItemInterface $item): ?ItemInterface 
+    {
+        return null;
+    }
+
 }

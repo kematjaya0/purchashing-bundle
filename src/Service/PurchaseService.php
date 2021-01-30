@@ -56,7 +56,7 @@ class PurchaseService implements PurchashingServiceInterface
     public function update(PurchaseInterface $entity):PurchaseInterface
     {
         
-        if(!$entity->getIsLocked()) {
+        if (!$entity->getIsLocked()) {
             return $entity;
         }
         
@@ -70,14 +70,14 @@ class PurchaseService implements PurchashingServiceInterface
     public function countTotal(PurchaseInterface $entity):float
     {
         $total = 0;
-        foreach($entity->getPurchaseDetails() as $purchaseDetail) {
-            if(!$purchaseDetail instanceof PurchaseDetailInterface) {
+        foreach ($entity->getPurchaseDetails() as $purchaseDetail) {
+            if (!$purchaseDetail instanceof PurchaseDetailInterface) {
                 continue;
             }
             
             $total += $purchaseDetail->getTotal();
             $item = $this->stockService->addStock($purchaseDetail->getItem(), $purchaseDetail->getQuantity(), $purchaseDetail->getPackaging());
-            if($purchaseDetail instanceof ClientStockCardInterface) {
+            if ($purchaseDetail instanceof ClientStockCardInterface) {
                 $this->stockCardService->insertStockCard($item, $purchaseDetail);
             }
 
@@ -91,7 +91,7 @@ class PurchaseService implements PurchashingServiceInterface
     protected function countPrincipalPrice(ItemInterface $item, float $price, float $quantity, PackagingInterface $packaging) : float
     {
         $itemPack = $this->getItemPackByPackagingOrSmallestUnit($item, $packaging);
-        if(!$itemPack instanceof ItemPackageInterface) {
+        if (!$itemPack instanceof ItemPackageInterface) {
             throw new \Exception(sprintf('cannot found item package for item %s', $item->getCode()));
         }
         
